@@ -1,6 +1,9 @@
-from django.urls import path
-from .views import taskList
+from django.urls import path, re_path
+from . import views
 
 urlpatterns = [
-    path("", taskList, name="main")
+    path("api/", views.taskList, name="main"),
+    re_path("login", views.login),
+    re_path("signup", views.signup),
+    re_path("test_token", views.test_token),
 ]
