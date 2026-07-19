@@ -4,6 +4,15 @@ Content-Type: application/json
 { "username": "adam", "password": "Pass1234!", "email": "adam@mail.com" }
 
 ###
+POST http://127.0.0.1:8000/signup 
+Content-Type: application/json
+
+{ "username": "roberto", "password": "Pass1234!", "email": "adam@mail.com" }
+
+###
+
+
+
 
 POST http://127.0.0.1:8000/login 
 Content-Type: application/json
@@ -11,7 +20,41 @@ Content-Type: application/json
 { "username": "adam", "password": "Pass1234!" }
 
 ###
+POST http://127.0.0.1:8000/login 
+Content-Type: application/json
 
-GET http://127.0.0.1:8000/test_token 
+{ "username": "roberto", "password": "Pass1234!" }
+
+###
+
+
+
+
+
+POST http://127.0.0.1:8000/create-task
 Content-Type: application/json 
-Authorization: token 3359978246a8283481bfa702a98f6d629cd99db2
+Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
+
+{ "owner" : "adam", "title" : "adam said that", "description" : "empty", "is_task_done" : false }
+
+###
+POST http://127.0.0.1:8000/create-task
+Content-Type: application/json 
+Authorization: token 5021ccc5a67a0cd3954a84faa5cf4eea33e7f529
+
+{ "owner" : "roberto", "title" : "roberto said that", "description" : "empty", "is_task_done" : false }
+
+####
+
+
+
+
+GET http://127.0.0.1:8000/tasks
+Content-Type: application/json 
+Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
+
+####
+
+GET http://127.0.0.1:8000/tasks
+Content-Type: application/json 
+Authorization: token 5021ccc5a67a0cd3954a84faa5cf4eea33e7f529

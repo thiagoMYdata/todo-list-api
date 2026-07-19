@@ -5,5 +5,8 @@ urlpatterns = [
     path("api/", views.taskList, name="main"),
     re_path("login", views.login),
     re_path("signup", views.signup),
-    re_path("test_token", views.test_token),
+    re_path("tasks", views.getAllTask),
+    re_path("create-task", views.postNewTask),
+
+
 ]
