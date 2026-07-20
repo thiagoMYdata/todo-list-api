@@ -13,22 +13,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from .models import Task
-from .serializers import TaskSerializer, UserSerializer
-
-
-@api_view(["GET", "POST"])
-def taskList(request):
-    if request.method == "GET":
-        task = Task.objects.all()
-        serializer = TaskSerializer(task, many=True)
-        return Response(serializer.data)
-
-    elif request.method == "POST":
-        serializer = TaskSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from .serializers import TaskSerializer, UserSerializer, TaskNotDoneListSerializer
 
 
 @api_view(["POST"])
@@ -54,21 +39,32 @@ def signup(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST"])
+@api_view(["POST", "GET", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def postNewTask(request):
-    serializer = TaskSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response("It worked!")
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+def apiTaskCRUD(request):
+    if request.method == "POST":
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"It worked!", "task":serializer.data})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
+    elif request.method == "GET": 
+        task = Task.objects.filter(is_task_done=False, owner=request.user.username).order_by("-create_at")
+        serializer = TaskNotDoneListSerializer(task, many=True)
+        return Response(serializer.data)
 
-@api_view(["GET"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def getAllTask(request):
-    task = Task.objects.filter(owner=request.user.username)
-    serializer = TaskSerializer(task, many=True)
-    return Response(serializer.data)
+    elif request.method == "PATCH":
+        task = get_object_or_404(Task.objects.filter(id=request.data["id"]), owner=request.user.username)
+        serializer = TaskSerializer(task, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "UPDATED!", "task": serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
+    elif request.method == "DELETE": 
+        task = get_object_or_404(Task.objects.filter(id=request.data["id"]), owner=request.user.username)
+        serializer = TaskSerializer(task)
+        task.delete()
+        return Response({"message":"DELETED", "deleted_task":serializer.data})

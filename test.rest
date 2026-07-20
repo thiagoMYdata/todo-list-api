@@ -1,3 +1,5 @@
+
+// signup 
 POST http://127.0.0.1:8000/signup 
 Content-Type: application/json
 
@@ -13,7 +15,7 @@ Content-Type: application/json
 
 
 
-
+// login
 POST http://127.0.0.1:8000/login 
 Content-Type: application/json
 
@@ -30,7 +32,7 @@ Content-Type: application/json
 
 
 
-
+// create task
 POST http://127.0.0.1:8000/create-task
 Content-Type: application/json 
 Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
@@ -48,7 +50,7 @@ Authorization: token 5021ccc5a67a0cd3954a84faa5cf4eea33e7f529
 
 
 
-
+// read task
 GET http://127.0.0.1:8000/tasks
 Content-Type: application/json 
 Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
@@ -58,3 +60,41 @@ Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
 GET http://127.0.0.1:8000/tasks
 Content-Type: application/json 
 Authorization: token 5021ccc5a67a0cd3954a84faa5cf4eea33e7f529
+
+
+
+
+###
+// UPDATE task
+PATCH http://127.0.0.1:8000/task
+Content-Type: application/json 
+Authorization: token 5021ccc5a67a0cd3954a84faa5cf4eea33e7f529
+
+{ "id" : 3, "description" : "test", "is_task_done" : false}
+
+###
+PATCH http://127.0.0.1:8000/task
+Content-Type: application/json 
+Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
+
+{ "id" : 3, "description" : "Can adam change robert task?", "is_task_done" : true}
+
+###
+
+
+
+// Delete 
+
+POST http://127.0.0.1:8000/create-task
+Content-Type: application/json 
+Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
+
+{ "owner" : "adam", "title" : "adam said that", "description" : "empty", "is_task_done" : false }
+
+###
+
+DELETE http://127.0.0.1:8000/create-task
+Content-Type: application/json 
+Authorization: token d60d77ab70b77e4a1d520c184f66fe074993beea
+
+{ "id" : xxx }
